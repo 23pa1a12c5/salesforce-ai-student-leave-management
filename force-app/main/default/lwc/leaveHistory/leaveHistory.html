@@ -1,0 +1,14 @@
+<template>
+
+    <lightning-card title="Leave History" icon-name="standard:record">
+
+        <lightning-datatable
+            key-field="Id"
+            data={leaveRequests}
+            columns={columns}
+            hide-checkbox-column>
+        </lightning-datatable>
+
+    </lightning-card>
+
+</template>

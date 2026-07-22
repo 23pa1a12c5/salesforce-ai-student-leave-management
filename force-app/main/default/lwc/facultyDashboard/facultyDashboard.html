@@ -1,0 +1,138 @@
+<template>
+
+    <lightning-card title="Faculty Approval Dashboard" icon-name="standard:people">
+
+        <!-- Dashboard Summary -->
+        <div class="slds-grid slds-wrap slds-gutters slds-m-around_medium">
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <div class="slds-box slds-theme_default slds-text-align_center">
+                    <div class="slds-text-title_bold">Total Requests</div>
+                    <div class="slds-text-heading_large slds-m-top_small">
+                        {totalRequests}
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <div class="slds-box slds-theme_warning slds-text-align_center">
+                    <div class="slds-text-title_bold">Pending</div>
+                    <div class="slds-text-heading_large slds-m-top_small">
+                        {pendingCount}
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <div class="slds-box slds-theme_success slds-text-align_center">
+                    <div class="slds-text-title_bold">Approved</div>
+                    <div class="slds-text-heading_large slds-m-top_small">
+                        {approvedCount}
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <div class="slds-box slds-theme_error slds-text-align_center">
+                    <div class="slds-text-title_bold">Rejected</div>
+                    <div class="slds-text-heading_large slds-m-top_small">
+                        {rejectedCount}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <template if:true={leaveRequests}>
+
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+
+                <thead>
+                    <tr>
+                        <th>Leave No</th>
+                        <th>Student</th>
+                        <th>Status</th>
+                        <th>Faculty Comment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <template for:each={leaveRequests} for:item="leave">
+
+                        <tr key={leave.Id}>
+
+                            <td>{leave.Name}</td>
+
+                            <td>{leave.Student_Name__c}</td>
+
+                            <td>{leave.Status__c}</td>
+
+                            <td>
+
+                                <template lwc:if={leave.isPending}>
+                                    <lightning-input
+                                        type="text"
+                                        variant="label-hidden"
+                                        placeholder="Enter comments"
+                                        value={leave.Faculty_Comments__c}
+                                        data-id={leave.Id}
+                                        onchange={handleComment}>
+                                    </lightning-input>
+                                </template>
+
+                                <template lwc:else>
+                                    {leave.Faculty_Comments__c}
+                                </template>
+
+                            </td>
+
+                            <td>
+
+                                <template lwc:if={leave.isPending}>
+
+                                    <lightning-button
+                                        label="Approve"
+                                        variant="success"
+                                        data-id={leave.Id}
+                                        onclick={approve}>
+                                    </lightning-button>
+
+                                    <lightning-button
+                                        label="Reject"
+                                        variant="destructive"
+                                        class="slds-m-left_small"
+                                        data-id={leave.Id}
+                                        onclick={reject}>
+                                    </lightning-button>
+
+                                </template>
+
+                                <template lwc:elseif={leave.isApproved}>
+                                    <span class="slds-text-color_success slds-text-title_bold">
+                                        ✔ Already Approved
+                                    </span>
+                                </template>
+
+                                <template lwc:else>
+                                    <span class="slds-text-color_error slds-text-title_bold">
+                                        ✖ Already Rejected
+                                    </span>
+                                </template>
+
+                            </td>
+
+                        </tr>
+
+                    </template>
+
+                </tbody>
+
+            </table>
+
+        </template>
+
+    </lightning-card>
+
+</template>
